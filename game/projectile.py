@@ -1,12 +1,10 @@
 
 
-class Projectile():
-    def __init__(self):
-        pass
+class Projectile:
 
+    def update_sprite(self, all_bullet_sprites):
+        return all_bullet_sprites
 
-    def updateSprite(self, allBulletSprites):
-        return allBulletSprites
-
-    def updateMovementAndCollision(self, collideableTiles, players, monsters, timeDelta, newExplosions, explosions):
+    def update_movement_and_collision(self, tiled_level, collideable_tiles, players, monsters,
+                                      time_delta, new_explosions, explosions):
         pass

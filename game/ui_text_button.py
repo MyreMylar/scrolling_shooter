@@ -1,24 +1,25 @@
 import pygame
 from pygame.locals import *
 
-class UTTextButton():
-    def __init__(self, rect, buttonText, fonts, fontSize):
+
+class UTTextButton:
+    def __init__(self, rect, button_text, fonts, font_size):
         self.fonts = fonts
-        self.buttonText = buttonText
+        self.buttonText = button_text
         self.rect = rect
         self.clickedButton = False
         self.isHovered = True
-        self.fontSize = fontSize
+        self.fontSize = font_size
 
         self.isEnabled = True
 
         self.buttonColour = pygame.Color(75, 75, 75)
         self.textColour = pygame.Color(255, 255, 255)
 
-        self.buttonTextrender = self.fonts[self.fontSize].render(self.buttonText, True, self.textColour)
+        self.button_text_render = self.fonts[self.fontSize].render(self.buttonText, True, self.textColour)
 
-    def handleInputEvent(self, event):
-        if self.isEnabled and self.isInside(pygame.mouse.get_pos()):
+    def handle_input_event(self, event):
+        if self.isEnabled and self.is_inside(pygame.mouse.get_pos()):
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     self.clickedButton = True
@@ -32,33 +33,36 @@ class UTTextButton():
         self.isEnabled = True
         self.buttonColour = pygame.Color(75, 75, 75)
         self.textColour = pygame.Color(255, 255, 255)
-        
-    
-    def wasPressed(self):
-        wasPressed = self.clickedButton
-        self.clickedButton = False
-        return wasPressed
 
-    def setText(self, text):
+    def was_pressed(self):
+        was_pressed = self.clickedButton
+        self.clickedButton = False
+        return was_pressed
+
+    def set_text(self, text):
         self.buttonText = text
-        self.buttonTextrender = self.fonts[self.fontSize].render(self.buttonText, True, self.textColour)
+        self.button_text_render = self.fonts[self.fontSize].render(self.buttonText, True, self.textColour)
     
     def update(self):
-        if self.isEnabled and self.isInside(pygame.mouse.get_pos()):
+        if self.isEnabled and self.is_inside(pygame.mouse.get_pos()):
             self.isHovered = True
             self.buttonColour = pygame.Color(100, 100, 100)
         elif self.isEnabled:
             self.isHovered = False
             self.buttonColour = pygame.Color(75, 75, 75)
-            
 
-    def isInside(self, screenPos):
-        isInside = False
-        if screenPos[0] >= self.rect[0] and screenPos[0] <= self.rect[0]+self.rect[2]:
-            if screenPos[1] >= self.rect[1] and screenPos[1] <= self.rect[1]+self.rect[3]:
-                isInside = True
-        return isInside
+    def is_inside(self, screen_pos):
+        is_inside = False
+        if self.rect[0] <= screen_pos[0] <= self.rect[0]+self.rect[2]:
+            if self.rect[1] <= screen_pos[1] <= self.rect[1]+self.rect[3]:
+                is_inside = True
+        return is_inside
 
     def draw(self, screen):
-        pygame.draw.rect(screen, self.buttonColour, pygame.Rect(self.rect[0],self.rect[1],self.rect[2], self.rect[3]), 0)     
-        screen.blit(self.buttonTextrender, self.buttonTextrender.get_rect(centerx=self.rect[0] + self.rect[2]*0.5, centery=self.rect[1] + self.rect[3]*0.5))
+        pygame.draw.rect(screen, self.buttonColour, pygame.Rect(self.rect[0],
+                                                                self.rect[1],
+                                                                self.rect[2],
+                                                                self.rect[3]), 0)
+        screen.blit(self.button_text_render,
+                    self.button_text_render.get_rect(centerx=self.rect[0] + self.rect[2] * 0.5,
+                                                     centery=self.rect[1] + self.rect[3] * 0.5))

@@ -1,10 +1,9 @@
 import pygame
 from pygame.locals import *
-from operator import attrgetter
+from game.ui_text_button import UTTextButton
 
-import game.ui_text_button as ButtonCode
 
-class MainMenu():
+class MainMenu:
 
     def __init__(self, fonts):
         self.showMenu = True
@@ -16,52 +15,49 @@ class MainMenu():
 
         self.backgroundImage = pygame.image.load("images/menu_background.png").convert()
 
-        self.playGameButton = ButtonCode.UTTextButton([437,465,150,35], "Play Game", fonts, 1)
-        self.editMapButton = ButtonCode.UTTextButton([437,515,150,35], "Edit Map", fonts, 1)
+        self.playGameButton = UTTextButton([437, 465, 150, 35], "Play Game", fonts, 1)
+        self.editMapButton = UTTextButton([437, 515, 150, 35], "Edit Map", fonts, 1)
 
-
-    def run(self, screen, background, fonts, screenData):
-        isMainMenuAndIndex = [0,0]
+    def run(self, screen, fonts, screen_data):
+        is_main_menu_and_index = [0, 0]
         running = True
         for event in pygame.event.get():
-            self.playGameButton.handleInputEvent(event)
-            self.editMapButton.handleInputEvent(event)
+            self.playGameButton.handle_input_event(event)
+            self.editMapButton.handle_input_event(event)
             
             if event.type == QUIT:
                 running = False
 
         self.playGameButton.update()
         self.editMapButton.update()
-        
 
-        if self.playGameButton.wasPressed():
+        if self.playGameButton.was_pressed():
             self.startGame = True
             self.showMenu = False
 
-        if self.editMapButton.wasPressed():
+        if self.editMapButton.was_pressed():
             self.showEditor = True
             self.showMenu = False
                     
-        screen.blit(self.backgroundImage, (0, 0)) # draw the background
+        screen.blit(self.backgroundImage, (0, 0))  # draw the background
         
-        mainMenuTitleString = "MAXIMUM GUNISHMENT"
-        mainMenuTitleTextRender = fonts[2].render(mainMenuTitleString, True, pygame.Color(255, 255, 255))
-        screen.blit(mainMenuTitleTextRender, mainMenuTitleTextRender.get_rect(centerx=screenData.screenSize[0]*0.5, centery=128))
+        main_menu_title_string = "MAXIMUM GUNISHMENT"
+        main_menu_title_text_render = fonts[2].render(main_menu_title_string, True, pygame.Color(255, 255, 255))
+        screen.blit(main_menu_title_text_render,
+                    main_menu_title_text_render.get_rect(centerx=screen_data.screenSize[0] * 0.5, centery=128))
 
         self.playGameButton.draw(screen)
         self.editMapButton.draw(screen)
        
         if self.showEditor:
-            isMainMenuAndIndex[0] = 2
+            is_main_menu_and_index[0] = 2
 
         elif self.startGame:
-            isMainMenuAndIndex[0] = 1
+            is_main_menu_and_index[0] = 1
         else:
-            isMainMenuAndIndex[0] = 0
+            is_main_menu_and_index[0] = 0
 
         if not running:
-            isMainMenuAndIndex[0] = 3
-            
-            
+            is_main_menu_and_index[0] = 3
 
-        return isMainMenuAndIndex
+        return is_main_menu_and_index

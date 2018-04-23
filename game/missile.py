@@ -1,34 +1,33 @@
 import math
-import random
 import pygame
-from pygame.locals import *
 
-import game.projectile as ProjectileCode
-import game.explosion as ExplosionCode
-import game.damage as DamageCode
+from game.projectile import Projectile
+from game.explosion import Explosion
+from game.damage import DamageType
 
-class Missile(ProjectileCode.Projectile):
-    def __init__(self, startPos, initialHeadingVector, damage, explosionsSpriteSheet, isAIBullet = False):
 
-        self.isAIBullet = isAIBullet
-        self.explosionsSpriteSheet = explosionsSpriteSheet
+class Missile(Projectile):
+    def __init__(self, start_pos, initial_heading_vector, damage, explosions_sprite_sheet, is_ai_bullet=False):
+
+        self.isAIBullet = is_ai_bullet
+        self.explosionsSpriteSheet = explosions_sprite_sheet
         self.imageName = "images/missile.png"
         self.original_image = pygame.image.load(self.imageName).convert_alpha()
         self.image = self.original_image.copy()
         self.sprite = pygame.sprite.Sprite()
        
         self.sprite.rect = self.image.get_rect()  
-        self.sprite.rect.center = startPos
+        self.sprite.rect.center = start_pos
 
-        self.currentVector = [initialHeadingVector[0], initialHeadingVector[1]]
+        self.currentVector = [initial_heading_vector[0], initial_heading_vector[1]]
 
-        self.position = [float(self.sprite.rect.center[0]),float(self.sprite.rect.center[1])]
-        self.world_position = [float(self.sprite.rect.center[0]),float(self.sprite.rect.center[1])]
+        self.position = [float(self.sprite.rect.center[0]), float(self.sprite.rect.center[1])]
+        self.world_position = [float(self.sprite.rect.center[0]), float(self.sprite.rect.center[1])]
         self.sprite.image = self.image
 
         self.shouldDie = False
 
-        self.bulletSpeed  = 225.0
+        self.bulletSpeed = 225.0
         self.damage = damage
 
         self.shotRange = 1024
@@ -38,85 +37,68 @@ class Missile(ProjectileCode.Projectile):
         self.homingTime = 0.2
         self.homingRadius = 256
 
-        #print("Firing missile")
-
-    def updateSprite(self, allBulletSprites):
+    def update_sprite(self, all_bullet_sprites):
         self.sprite.image = self.image
-        allBulletSprites.add(self.sprite)
-        return allBulletSprites
+        all_bullet_sprites.add(self.sprite)
+        return all_bullet_sprites
 
-    def updateMovementAndCollision(self, tiledLevel, collideableTiles, players, monsters, timeDelta, timeMultiplier, newExplosions, explosions):
+    def update_movement_and_collision(self, tiled_level, collideable_tiles, players, monsters,
+                                      time_delta, new_explosions, explosions):
         if self.isAIBullet:
             for player in players:
-                if player.testProjectileCollision(self.sprite.rect):
+                if player.test_projectile_collision(self.sprite.rect):
                     self.shouldDie = True
         else:
             for monster in monsters:
-                if monster.testProjectileCollision(self.sprite.rect):
+                if monster.test_projectile_collision(self.sprite.rect):
                     self.shouldDie = True
-        for tile in collideableTiles:
-            if tile.testProjectileCollision(self.sprite.rect):
+        for tile in collideable_tiles:
+            if tile.test_projectile_collision(self.sprite.rect):
                 self.shouldDie = True
 
-        #if self.isAIBullet:       
-##        if self.homingTimeAcc < self.homingTime:
-##            self.homingTimeAcc += timeDelta
-##        else:
-##            self.timeToHomeIn = True
-##            
-##        if self.timeToHomeIn:
-##            self.homingTimeAcc = 0.0
-##            self.timeToHomeIn = False
-##            closestMonsterInRadius, closestMonsterDistance = self.getClosestMonsterInRadius(monsters)
-##            if closestMonsterInRadius != None:
-##                self.currentVector = self.calculateAimingVector(closestMonsterInRadius, closestMonsterDistance)
-##                self.shotRange = closestMonsterDistance
-
-        self.shotRange -= timeDelta * timeMultiplier * self.bulletSpeed
-        self.world_position[0] += (self.currentVector[0] * timeDelta * timeMultiplier * self.bulletSpeed)
-        self.world_position[1] += (self.currentVector[1] * timeDelta * timeMultiplier * self.bulletSpeed)
+        self.shotRange -= time_delta * self.bulletSpeed
+        self.world_position[0] += (self.currentVector[0] * time_delta * self.bulletSpeed)
+        self.world_position[1] += (self.currentVector[1] * time_delta * self.bulletSpeed)
         
-        self.position[0] = self.world_position[0] - tiledLevel.positionOffset[0]
-        self.position[1] = self.world_position[1] - tiledLevel.positionOffset[1]
+        self.position[0] = self.world_position[0] - tiled_level.positionOffset[0]
+        self.position[1] = self.world_position[1] - tiled_level.positionOffset[1]
         self.sprite.rect.center = self.position
 
         if self.shotRange <= 0.0:
             self.shouldDie = True
 
-        #calc facing angle
-        directionMagnitude = math.sqrt(self.currentVector[0] * self.currentVector[0] + self.currentVector[1] * self.currentVector[1])
-        unitDirVector = [0,0]
-        if directionMagnitude > 0.0:
-            unitDirVector = [self.currentVector[0]/directionMagnitude, self.currentVector[1]/directionMagnitude]
-        facingAngle = math.atan2(-unitDirVector[0], -unitDirVector[1])*180/math.pi
+        # calc facing angle
+        direction_magnitude = math.sqrt(self.currentVector[0] ** 2 + self.currentVector[1] ** 2)
+        unit_dir_vector = [0, 0]
+        if direction_magnitude > 0.0:
+            unit_dir_vector = [self.currentVector[0]/direction_magnitude, self.currentVector[1]/direction_magnitude]
+        facing_angle = math.atan2(-unit_dir_vector[0], -unit_dir_vector[1])*180/math.pi
 
-        bullet_centrePosition = self.sprite.rect.center
-        self.image = pygame.transform.rotate(self.original_image,facingAngle)
+        bullet_centre_position = self.sprite.rect.center
+        self.image = pygame.transform.rotate(self.original_image, facing_angle)
         self.sprite.rect = self.image.get_rect()
-        self.sprite.rect.center = bullet_centrePosition
+        self.sprite.rect.center = bullet_centre_position
 
         if self.shouldDie:
-            #print("exploding")
-            newExplosion = ExplosionCode.Explosion(self.world_position, self.explosionsSpriteSheet, 96, self.damage, DamageCode.DamageType.MISSILE)
-            newExplosions.append(newExplosion)
-            explosions.append(newExplosion)
+            new_explosion = Explosion(self.world_position, self.explosionsSpriteSheet,
+                                      96, self.damage, DamageType.MISSILE)
+            new_explosions.append(new_explosion)
+            explosions.append(new_explosion)
 
-    def getClosestMonsterInRadius(self, monsters):
-        closestMonsterDistance = 100000.0
-        closestMonsterInRadius = None
+    def get_closest_monster_in_radius(self, monsters):
+        closest_monster_distance = 100000.0
+        closest_monster_in_radius = None
         for monster in monsters:
-            xDist = self.position[0] - monster.position[0]
-            yDist = self.position[1] - monster.position[1]
-            totalDist = math.sqrt((xDist * xDist) + (yDist * yDist))
-            if totalDist < self.homingRadius:
-                if totalDist < closestMonsterDistance:
-                    closestMonsterDistance = totalDist
-                    closestMonsterInRadius = monster
-        return closestMonsterInRadius, closestMonsterDistance
+            x_dist = self.position[0] - monster.position[0]
+            y_dist = self.position[1] - monster.position[1]
+            total_dist = math.sqrt((x_dist * x_dist) + (y_dist * y_dist))
+            if total_dist < self.homingRadius:
+                if total_dist < closest_monster_distance:
+                    closest_monster_distance = total_dist
+                    closest_monster_in_radius = monster
+        return closest_monster_in_radius, closest_monster_distance
 
-    def calculateAimingVector(self, target, distance ):
-        xDirection = target.position[0] - self.position[0]
-        yDirection = target.position[1] - self.position[1]
-        return [xDirection/distance, yDirection/distance]
-
-
+    def calculate_aiming_vector(self, target, distance):
+        x_direction = target.position[0] - self.position[0]
+        y_direction = target.position[1] - self.position[1]
+        return [x_direction/distance, y_direction/distance]
