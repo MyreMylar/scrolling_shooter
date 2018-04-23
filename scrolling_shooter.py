@@ -271,6 +271,28 @@ def main():
             all_explosion_sprites.draw(screen)
             all_projectile_sprites.draw(screen)
 
+            # ----------------------------------------
+            # Challenge 2 - part 2
+            # ----------------------
+            #
+            # Uncomment one group of either CIRCLES
+            # or RECTANGLES below at a time
+            # to visualise the collision shapes used
+            # in the game.
+            # ----------------------------------------
+            # # CIRCLES
+            # player.draw_collision_radius_circle(screen)
+            # for monster in monsters:
+            #     monster.draw_collision_radius_circle(screen)
+
+            # # RECTANGLES
+            # player.draw_collision_rect(screen)
+            # for monster in monsters:
+            #     monster.draw_collision_rect(screen)
+            #
+            # for bullet in projectiles:
+            #     bullet.draw_collision_rect(screen)
+
             health_bar.draw(screen, small_font)
 
             if time_delta > 0.0:

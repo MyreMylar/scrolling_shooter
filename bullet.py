@@ -1,3 +1,7 @@
+# -----------------------------------
+# Scroll down for the challenges!
+# -----------------------------------
+
 import math
 import pygame
 
@@ -48,11 +52,89 @@ class Bullet(Projectile):
 
         if not self.shouldDie:
             if not self.isAIBullet:
-                for monster in monsters:
-                    if monster.test_projectile_collision(self.sprite.rect):
-                        monster.take_damage(self.damage)
-                        self.shouldDie = True
+                # ---------------------------------------------
+                # Challenge 1 - APPROX 4 LINES OF CODE
+                # ---------------------------------------------
+                #
+                # Create a collision loop for the player's
+                # bullets here to replace the 'pass' command below.
+                #
+                # It needs to do three things -
+                #
+                # 1. Check if this bullet's sprite rectangle
+                #    collides with all the monsters.
+                #
+                # 2. Kill the bullet if it does hit a monster.
+                #
+                # 3. Do some damage to a monster if we hit it.
+                #
+                # HINTS
+                # -------
+                #
+                # - Use a for loop to loop through all the monsters.
+                # - There is a function in the monster class
+                #   called 'test_projectile_collision' that will test
+                #   if a bullet has hit a particular monster.
+                # - You can find the bullet sprite's rectangle
+                #   at: self.sprite.rect
+                # - There is also a function on the monster class
+                #   called 'takeDamage' that will apply damage
+                #   to a monster and trigger the correct visual
+                #   effects.
+                # - There is a class variable at self.damage that
+                #   contains the amount of damage a bullet should do.
+                # - Killing a bullet is just matter of setting
+                #   it's class variable called 'shouldDie' to
+                #   True.
+                # - if you get stuck, have a look below at the loop
+                #   for monster's bullets hitting the player for
+                #   ideas
+                # ----------------------------------------------
+                pass
 
+
+
+
+                # ---------------------------------------------------------------
+                # Challenge 2 - part 1
+                # ---------------------
+                #
+                # The collision detection used in this game is fairly
+                # basic. The 'testProjectileCollision' function used in
+                # challenge 1 does two things:
+                #
+                # 1. It first tests if axis aligned rectangles surrounding
+                #    the bullet and the monster overlap. Axis aligned rectangles
+                #    are simply ones where the sides are horizontal and vertical
+                #    rather than rotated. This type of shape is very quick to
+                #    test for overlaps and by using one that fully contains our
+                #    sprites, no matter how they are rotated we can be sure we
+                #    won't miss any genuine collisions.
+                #
+                # 2. Then, because using only axis aligned rectangles is not very accurate
+                #    to the shape of our sprites, we do a second overlap test
+                #    on only those sprites that we found to be collding in the
+                #    first test. This time we do a 'circle with axis aligned rectangle'
+                #    overlap test with the monsters represented by circles, and the
+                #    bullets still represented by axis aligned rectangles. This test is
+                #    slower to perform but more accurate to the actual shapes of some
+                #    of our monster sprites. If we only did the second test on all of our
+                #    monsters the code would still be just as accurate, but it would run
+                #    more slowly as we wouldn't be quickly eliminating most monsters from
+                #    taking the slower, more accurate test.
+                #
+                #
+                # Your second challenge is to think of some ideas for how you might
+                # improve the collision detection used in this game to better
+                # meet the three goals originally outlined on the worksheet.
+                #
+                # To help you think I've added some code to visualise the collision
+                # shapes used in this game. Head over to the 'scrolling_shooter'
+                # code file and scroll down to the rendering part of the game loop to
+                # find and activate this code.
+                #
+                # I will wander the room to quiz you on your thoughts!
+                # -------------------------------------------------------------------
             else:  # is a monster bullet
                 for player in players:
                     if player.test_projectile_collision(self.sprite.rect):
