@@ -15,8 +15,8 @@ class MainMenu:
 
         self.backgroundImage = pygame.image.load("images/menu_background.png").convert()
 
-        self.playGameButton = UTTextButton([437, 465, 150, 35], "Play Game", fonts, 1)
-        self.editMapButton = UTTextButton([437, 515, 150, 35], "Edit Map", fonts, 1)
+        self.playGameButton = UTTextButton([437, 465, 150, 35], "Play Game", fonts, "bod_pstc_32")
+        self.editMapButton = UTTextButton([437, 515, 150, 35], "Edit Map", fonts, "bod_pstc_32")
 
     def run(self, screen, fonts, screen_data):
         is_main_menu_and_index = [0, 0]
@@ -42,7 +42,8 @@ class MainMenu:
         screen.blit(self.backgroundImage, (0, 0))  # draw the background
         
         main_menu_title_string = "MAXIMUM GUNISHMENT"
-        main_menu_title_text_render = fonts[2].render(main_menu_title_string, True, pygame.Color(255, 255, 255))
+        main_menu_title_text_render = fonts["bod_pstc_150"].render(main_menu_title_string,
+                                                                   True, pygame.Color(255, 255, 255))
         screen.blit(main_menu_title_text_render,
                     main_menu_title_text_render.get_rect(centerx=screen_data.screenSize[0] * 0.5, centery=128))
 

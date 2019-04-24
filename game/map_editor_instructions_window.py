@@ -14,7 +14,8 @@ class MapEditorInstructionsWindow:
         self.shouldExit = False
 
         self.doneButton = UTTextButton([self.windowRect[0] + (self.windowRect[2]/2) + 45,
-                                        self.windowRect[1] + self.windowRect[3]-30, 70, 20], "Done", fonts, 0)
+                                        self.windowRect[1] + self.windowRect[3]-30, 70, 20],
+                                       "Done", fonts, "default_16")
 
         self.instructionsText1 = "Arrow keys to scroll map"
         self.instructionsText2 = "Left mouse click to select tile"
@@ -30,15 +31,15 @@ class MapEditorInstructionsWindow:
 
         self.title_text_render = None
 
-        self.instructionsTextRender1 = self.fonts[0].render(self.instructionsText1, True, self.textColour)
-        self.instructionsTextRender2 = self.fonts[0].render(self.instructionsText2, True, self.textColour)
-        self.instructionsTextRender3 = self.fonts[0].render(self.instructionsText3, True, self.textColour)
-        self.instructionsTextRender4 = self.fonts[0].render(self.instructionsText4, True, self.textColour)
-        self.instructionsTextRender5 = self.fonts[0].render(self.instructionsText5, True, self.textColour)
+        self.instructionsTextRender1 = self.fonts["default_16"].render(self.instructionsText1, True, self.textColour)
+        self.instructionsTextRender2 = self.fonts["default_16"].render(self.instructionsText2, True, self.textColour)
+        self.instructionsTextRender3 = self.fonts["default_16"].render(self.instructionsText3, True, self.textColour)
+        self.instructionsTextRender4 = self.fonts["default_16"].render(self.instructionsText4, True, self.textColour)
+        self.instructionsTextRender5 = self.fonts["default_16"].render(self.instructionsText5, True, self.textColour)
 
-        self.instructionsTextRender6 = self.fonts[0].render(self.instructionsText6, True, self.textColour)
-        self.instructionsTextRender7 = self.fonts[0].render(self.instructionsText7, True, self.textColour)
-        self.instructionsTextRender8 = self.fonts[0].render(self.instructionsText8, True, self.textColour)
+        self.instructionsTextRender6 = self.fonts["default_16"].render(self.instructionsText6, True, self.textColour)
+        self.instructionsTextRender7 = self.fonts["default_16"].render(self.instructionsText7, True, self.textColour)
+        self.instructionsTextRender8 = self.fonts["default_16"].render(self.instructionsText8, True, self.textColour)
 
     def handle_input_event(self, event):
         self.doneButton.handle_input_event(event)
@@ -63,7 +64,7 @@ class MapEditorInstructionsWindow:
                                      self.windowRect[2],
                                      self.windowRect[3]), 0)
 
-        self.title_text_render = self.fonts[1].render(self.windowTitleStr, True, self.textColour)
+        self.title_text_render = self.fonts["bod_pstc_32"].render(self.windowTitleStr, True, self.textColour)
         screen.blit(self.title_text_render,
                     self.title_text_render.get_rect(centerx=self.windowRect[0] + self.windowRect[2] * 0.5,
                                                     centery=self.windowRect[1] + 24))

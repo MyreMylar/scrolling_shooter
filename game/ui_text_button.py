@@ -3,20 +3,20 @@ from pygame.locals import *
 
 
 class UTTextButton:
-    def __init__(self, rect, button_text, fonts, font_size):
+    def __init__(self, rect, button_text, fonts, font_name):
         self.fonts = fonts
         self.buttonText = button_text
         self.rect = rect
         self.clickedButton = False
         self.isHovered = True
-        self.fontSize = font_size
+        self.font_name = font_name
 
         self.isEnabled = True
 
         self.buttonColour = pygame.Color(75, 75, 75)
         self.textColour = pygame.Color(255, 255, 255)
 
-        self.button_text_render = self.fonts[self.fontSize].render(self.buttonText, True, self.textColour)
+        self.button_text_render = self.fonts[self.font_name].render(self.buttonText, True, self.textColour)
 
     def handle_input_event(self, event):
         if self.isEnabled and self.is_inside(pygame.mouse.get_pos()):
@@ -41,7 +41,7 @@ class UTTextButton:
 
     def set_text(self, text):
         self.buttonText = text
-        self.button_text_render = self.fonts[self.fontSize].render(self.buttonText, True, self.textColour)
+        self.button_text_render = self.fonts[self.font_name].render(self.buttonText, True, self.textColour)
     
     def update(self):
         if self.isEnabled and self.is_inside(pygame.mouse.get_pos()):
