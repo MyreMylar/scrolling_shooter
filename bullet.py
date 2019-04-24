@@ -78,7 +78,7 @@ class Bullet(Projectile):
                 # - You can find the bullet sprite's rectangle
                 #   at: self.sprite.rect
                 # - There is also a function on the monster class
-                #   called 'takeDamage' that will apply damage
+                #   called 'take_damage' that will apply damage
                 #   to a monster and trigger the correct visual
                 #   effects.
                 # - There is a class variable at self.damage that
@@ -97,7 +97,7 @@ class Bullet(Projectile):
                 # ---------------------
                 #
                 # The collision detection used in this game is fairly
-                # basic. The 'testProjectileCollision' function used in
+                # basic. The 'test_projectile_collision' function used in
                 # challenge 1 does two things:
                 #
                 # 1. It first tests if axis aligned rectangles surrounding
@@ -110,7 +110,7 @@ class Bullet(Projectile):
                 #
                 # 2. Then, because using only axis aligned rectangles is not very accurate
                 #    to the shape of our sprites, we do a second overlap test
-                #    on only those sprites that we found to be collding in the
+                #    on only those sprites that we found to be colliding in the
                 #    first test. This time we do a 'circle with axis aligned rectangle'
                 #    overlap test with the monsters represented by circles, and the
                 #    bullets still represented by axis aligned rectangles. This test is
