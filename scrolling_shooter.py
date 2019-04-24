@@ -10,6 +10,8 @@ from game.tiled_level import TiledLevel
 from game.pick_up import PickUpSpawner
 
 from game.standard_monster import StandardMonster
+from game.fps_counter import FPSCounter
+from game.camera import Camera
 
 
 class ScreenData:
@@ -83,6 +85,7 @@ def main():
     x_screen_size = 1024
     y_screen_size = 600
     screen_data = ScreenData([x_screen_size, 0], [x_screen_size, 184], [x_screen_size, y_screen_size])
+    camera = Camera((512, 300), (x_screen_size, y_screen_size), (16*64, 128*64))
     screen = pygame.display.set_mode(screen_data.screenSize)
     pygame.display.set_caption('Maximum Gunishment')
     background = pygame.Surface(screen.get_size())
@@ -96,14 +99,18 @@ def main():
     all_explosion_sprites = pygame.sprite.Group()
     all_projectile_sprites = pygame.sprite.Group()
 
-    fonts = []
+    fonts = {}
     small_font = pygame.font.Font(None, 16)
     font = pygame.font.Font("data/BOD_PSTC.TTF", 32)
     large_font = pygame.font.Font("data/BOD_PSTC.TTF", 150)
 
-    fonts.append(small_font)
-    fonts.append(font)
-    fonts.append(large_font)
+    fonts["default_14"] = pygame.font.Font(None, 14)
+    fonts["default_32"] = pygame.font.Font(None, 32)
+    fonts["default_16"] = small_font
+    fonts["bod_pstc_32"] = font
+    fonts["bod_pstc_150"] = large_font
+
+    fps_counter = FPSCounter(fonts)
     
     explosions_sprite_sheet = pygame.image.load("images/explosions.png").convert_alpha()
 
@@ -125,7 +132,7 @@ def main():
                                   screen_data.editorHudDimensions[0], screen_data.editorHudDimensions[1])
     editor = MapEditor(tiled_level, editor_hud_rect, fonts)
     
-    health_bar = HealthBar([900, 25], 100, 16)
+    health_bar = HealthBar([50, 25], 100, 16)
 
     pick_up_spawner = PickUpSpawner(pick_ups, all_pick_up_sprites)
 
@@ -146,7 +153,7 @@ def main():
     spawn_monsters(monsters, all_monster_sprites, screen_data, tiled_level, explosions_sprite_sheet)
     
     while running:
-        frame_time = clock.tick()
+        frame_time = clock.tick(60)
         time_delta = frame_time/1000.0
 
         if is_main_menu:
@@ -295,13 +302,8 @@ def main():
 
             health_bar.draw(screen, small_font)
 
-            if time_delta > 0.0:
-                fps_string = "FPS: " + "{:.2f}".format(1.0/time_delta)
-                fps_text_render = font.render(fps_string, True, pygame.Color(255, 255, 255))
-                screen.blit(
-                    fps_text_render,
-                    fps_text_render.get_rect(centerx=screen_data.hudDimensions[0]*0.1,
-                                             centery=screen_data.screenSize[1]-(screen_data.screenSize[1]*0.95)))
+            fps_counter.update(time_delta)
+            fps_counter.draw(screen, camera)
             
             if is_game_over:
                 win_message_text_render = large_font.render(win_message.upper(),
