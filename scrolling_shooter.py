@@ -209,12 +209,26 @@ def main():
                 pass
 
             if player is not None:
-                if player.health <= 0:
-                    is_game_over = True
-                    win_message = "You have been defeated!"
-                if player.position[1] < 0 < player.health:
-                    is_game_over = True
-                    win_message = "You are victorious!"
+                if player.health <= 0 or player.position[1] < 0 < player.health:
+                    if player.health <= 0:
+                        is_game_over = True
+                        win_message = "You have been defeated!"
+                    if player.position[1] < 0 < player.health:
+                        is_game_over = True
+                        win_message = "You are victorious!"
+
+                    win_message_bg_text_render = large_font.render(win_message.upper(),
+                                                                   True, pygame.Color("#444444"))
+                    win_message_text_render = large_font.render(win_message.upper(),
+                                                                True, pygame.Color("#FFFFFF"))
+                    win_message_text_render_rect = win_message_text_render.get_rect(centerx=x_screen_size / 2,
+                                                                                    centery=(y_screen_size / 2) - 128)
+                    play_again_text_render = font.render("Play Again? Press 'Y' to restart".upper(),
+                                                         True, pygame.Color("#FFFFFF"))
+                    play_again_bg_text_render = font.render("Play Again? Press 'Y' to restart".upper(),
+                                                            True, pygame.Color("#444444"))
+                    play_again_text_render_rect = play_again_text_render.get_rect(centerx=x_screen_size / 2,
+                                                                                  centery=(y_screen_size / 2))
 
             all_projectile_sprites.empty()
             all_explosion_sprites.empty()
@@ -284,15 +298,27 @@ def main():
             fps_counter.draw(screen, camera)
             
             if is_game_over:
-                win_message_text_render = large_font.render(win_message.upper(),
-                                                            True, pygame.Color(255, 255, 255))
-                win_message_text_render_rect = win_message_text_render.get_rect(centerx=x_screen_size/2,
-                                                                                centery=(y_screen_size/2)-128)
-                play_again_text_render = font.render("Play Again? Press 'Y' to restart".upper(),
-                                                     True, pygame.Color(255, 255, 255))
-                play_again_text_render_rect = play_again_text_render.get_rect(centerx=x_screen_size/2,
-                                                                              centery=(y_screen_size/2))
+                center = (win_message_text_render_rect.centerx, win_message_text_render_rect.centery)
+                screen.blit(win_message_bg_text_render, win_message_bg_text_render.get_rect(centerx=center[0] - 2,
+                                                                                            centery=center[1]))
+                screen.blit(win_message_bg_text_render, win_message_bg_text_render.get_rect(centerx=center[0] + 2,
+                                                                                            centery=center[1]))
+                screen.blit(win_message_bg_text_render, win_message_bg_text_render.get_rect(centerx=center[0],
+                                                                                            centery=center[1] - 2))
+                screen.blit(win_message_bg_text_render, win_message_bg_text_render.get_rect(centerx=center[0],
+                                                                                            centery=center[1] + 2))
                 screen.blit(win_message_text_render, win_message_text_render_rect)
+
+                center = (play_again_text_render_rect.centerx, play_again_text_render_rect.centery)
+                screen.blit(play_again_bg_text_render, play_again_bg_text_render.get_rect(centerx=center[0] - 2,
+                                                                                          centery=center[1]))
+                screen.blit(play_again_bg_text_render, play_again_bg_text_render.get_rect(centerx=center[0] + 2,
+                                                                                          centery=center[1]))
+                screen.blit(play_again_bg_text_render, play_again_bg_text_render.get_rect(centerx=center[0],
+                                                                                          centery=center[1] - 2))
+                screen.blit(play_again_bg_text_render, play_again_bg_text_render.get_rect(centerx=center[0],
+                                                                                          centery=center[1] + 2))
+
                 screen.blit(play_again_text_render, play_again_text_render_rect)
 
         pygame.display.flip()  # flip all our drawn stuff onto the screen
